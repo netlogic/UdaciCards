@@ -110,7 +110,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: blue,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        width : '100%',
     },
     containerNoDeck: {
         flex: 1,
