@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Platform } from 'react-native'
+import { View, Text, StyleSheet, Platform, Dimensions } from 'react-native'
 import { white } from '../utils/colors'
 
 import { AppLoading } from 'expo'
@@ -11,7 +11,7 @@ class Deck extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container,{width : Dimensions.get('window').width - 30 } ]}>
                 <Text>{this.props.deck.title}</Text>
             </View>
         )
@@ -32,6 +32,9 @@ const styles = StyleSheet.create({
           width: 0,
           height: 3
         },
+        height : 200,
+        marginTop : 10,
+        marginBottom : 10,
     },
 })
 

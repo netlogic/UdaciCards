@@ -10,7 +10,7 @@ import Decks from './components/Decks.js'
 import Deck from './components/Deck.js'
 import NewDeck from './components/NewDeck.js'
 import Scores from './components/Scores.js'
-import { white, blue} from './utils/colors'
+import { white, gray, blue} from './utils/colors'
 
 const Tabs = TabNavigator({
   Decks : {

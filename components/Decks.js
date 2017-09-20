@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, FlatList, Alert, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import { white, blue } from '../utils/colors'
+import { white, blue, gray } from '../utils/colors'
 import { fetchDecks } from '../utils/apis'
 import { loadedDecks, addDeck, addExampleDecks } from '../actions'
 import { AppLoading } from 'expo'
@@ -55,7 +55,7 @@ class Decks extends Component {
 
     renderNoDecksView() {
         return (
-            <View style={styles.container}>
+            <View style={styles.containerNoDeck}>
                 <Text style={styles.appNoDecks}>Hi! There are no quiz decks created yet.</Text>
                 <View style={{ height: 20 }} />
                 <Text style={styles.appNoDecks}>Please press a button below to get started.</Text>
@@ -92,7 +92,7 @@ class Decks extends Component {
 
         return (
             <View style={styles.container}>
-                <FlatList
+                <FlatList style={{flex:1}}
                     data={arrayOfDecks}
                     renderItem={( item ) => {
                         return (
@@ -108,10 +108,16 @@ class Decks extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: white,
-        padding: 20,
+        backgroundColor: blue,
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'center'
+    },
+    containerNoDeck: {
+        flex: 1,
+        backgroundColor: white,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        padding : 20,
     },
     appNoDecks: {
         color: blue,
