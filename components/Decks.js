@@ -90,6 +90,12 @@ class Decks extends Component {
             return this.renderNoDecksView();
         }
 
+        arrayOfDecks = arrayOfDecks.sort(function(a, b){
+            let au = a.title.toUpperCase();
+            let bu = b.title.toUpperCase();
+            return au.localeCompare(bu);
+        });
+
         return (
             <View style={styles.container}>
                 <FlatList style={{flex:1}}
