@@ -1,16 +1,20 @@
 import { AsyncStorage } from 'react-native'
 
-export const DECKS_STORAGE_KEY = 'Decksv2'
+export const DECKS_STORAGE_KEY = 'Decksv1a'
 export const SCORES_STORAGE_KEY = 'Scores'
 
 export function fetchDecks() {
-    return AsyncStorage.getItem(DECKS_STORAGE_KEY);
+    return AsyncStorage.getItem(DECKS_STORAGE_KEY)
+    .then((results) => {
+        const data = JSON.parse(results)
+        return data;
+      })  
 }
 
 export function saveAllDecks(decks) {
-    return AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify({
+    return AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(
        decks
-    }))
+    ))
 }
 
 export function fetchScores() {

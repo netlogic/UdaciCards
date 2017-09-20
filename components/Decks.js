@@ -7,7 +7,7 @@ import { loadedDecks, addDeck, addExampleDecks } from '../actions'
 import { AppLoading } from 'expo'
 import ImageButton from './ImageButton'
 import { NavigationActions } from 'react-navigation'
-
+import Deck from './Deck.js'
 
 class Decks extends Component {
     state = {
@@ -94,7 +94,11 @@ class Decks extends Component {
             <View style={styles.container}>
                 <FlatList
                     data={arrayOfDecks}
-                    renderItem={({ item }) => <Text>{item.key}</Text>}
+                    renderItem={( item ) => {
+                        return (
+                            <Deck  key={item.index} dispatch={this.props.dispatch} deck={item.item}/>
+                        )
+                    }}
                 />
             </View>
         )

@@ -6,7 +6,7 @@ import { saveAllDecks } from '../utils/apis.js'
 export function loadedDecks (decks) {
   return {
     type: LOADED_DECKS,
-    decks,
+    decks : decks ? decks.decks : null ,
   }
 }
 
@@ -50,8 +50,6 @@ export function addExampleDecks ( ) {
           }
     }
     saveAllDecks( newDecks );
-    return {
-        type: LOADED_DECKS,
-        ...newDecks
-    }
+    newDecks.type = LOADED_DECKS;
+    return newDecks;
 }
