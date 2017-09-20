@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { View, Alert, Text, StyleSheet } from 'react-native'
+import { View, FlatList, Alert, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { white, blue } from '../utils/colors'
 import { fetchDecks } from '../utils/apis'
-import { loadedDecks, addDeck } from '../actions'
+import { loadedDecks, addDeck, addExampleDecks } from '../actions'
 import { AppLoading } from 'expo'
 import ImageButton from './ImageButton'
 import { NavigationActions } from 'react-navigation'
@@ -21,13 +21,11 @@ class Decks extends Component {
 
         this.addNewDeck = this.addNewDeck.bind(this);
         this.addExampleDeck = this.addExampleDeck.bind(this);
-        
+
     }
 
     componentDidMount() {
         const { dispatch } = this.props;
-
-
         fetchDecks()
             .then((decks) => dispatch(loadedDecks(decks)))
             .then(({ decks }) => {
@@ -44,25 +42,29 @@ class Decks extends Component {
             'UdaciCards',
             "Please press 'OK' to add example deck",
             [
-              {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-              {text: 'OK', onPress: () => console.log('OK Pressed')},
+                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                {
+                    text: 'OK', onPress: () => {
+                        this.props.dispatch(addExampleDecks());
+                    }
+                },
             ],
             { cancelable: false }
-          )
+        )
     }
 
     renderNoDecksView() {
         return (
             <View style={styles.container}>
                 <Text style={styles.appNoDecks}>Hi! There are no quiz decks created yet.</Text>
-                <View style={{height:20}}/>
+                <View style={{ height: 20 }} />
                 <Text style={styles.appNoDecks}>Please press a button below to get started.</Text>
-                <View style={{height:20}}/>
-                <ImageButton style={{ padding: 10 }} imageName='add-to-list' onPress={()=>{this.addNewDeck()}}>
+                <View style={{ height: 20 }} />
+                <ImageButton style={{ padding: 10 }} imageName='add-to-list' onPress={() => { this.addNewDeck() }}>
                     Create New Deck
                 </ImageButton>
                 <ImageButton style={{ padding: 10 }} imageName='menu' onPress={this.addExampleDeck}>
-                    Add Example Deck
+                    Add Example Decks
                 </ImageButton>
             </View>
         )
@@ -78,7 +80,9 @@ class Decks extends Component {
 
         let arrayOfDecks = [];
 
-        for (deck in decks) {
+        for (let deckName in decks) {
+            let deck = decks[deckName];
+            deck.key = deckName;
             arrayOfDecks.push(deck);
         }
 
@@ -88,7 +92,10 @@ class Decks extends Component {
 
         return (
             <View style={styles.container}>
-                <Text>Decks</Text>
+                <FlatList
+                    data={arrayOfDecks}
+                    renderItem={({ item }) => <Text>{item.key}</Text>}
+                />
             </View>
         )
     }
@@ -107,7 +114,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        width  : '90%',
+        width: '90%',
     }
 })
 

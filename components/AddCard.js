@@ -6,7 +6,7 @@ export default class AddCard extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>AddCard</Text>
+                <Text>Add Card</Text>
             </View>
         )
     }
