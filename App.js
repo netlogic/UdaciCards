@@ -64,11 +64,12 @@ const MainNavigator = StackNavigator({
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Udacity Cards up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+      <Provider store={createStore(reducer)}>
+      <View style={{flex: 1}}>
+        <View  style={styles.statusBar}/>
+        <MainNavigator />
       </View>
+    </Provider>
     );
   }
 }
@@ -79,5 +80,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  statusBar: {
+    backgroundColor: purple,
+    height: Constants.statusBarHeight,
   },
 });
