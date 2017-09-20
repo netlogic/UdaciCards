@@ -1,14 +1,27 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Alert, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import { white } from '../utils/colors'
+import { white, blue } from '../utils/colors'
 import { fetchDecks } from '../utils/apis'
 import { loadedDecks, addDeck } from '../actions'
 import { AppLoading } from 'expo'
+import ImageButton from './ImageButton'
+import { NavigationActions } from 'react-navigation'
+
 
 class Decks extends Component {
     state = {
         ready: false,
+    }
+
+    constructor(props) {
+        super(props);
+        console.log(props);
+        console.log("create decks")
+
+        this.addNewDeck = this.addNewDeck.bind(this);
+        this.addExampleDeck = this.addExampleDeck.bind(this);
+        
     }
 
     componentDidMount() {
@@ -22,12 +35,35 @@ class Decks extends Component {
             .then(() => this.setState(() => ({ ready: true })))
     }
 
+    addNewDeck() {
+        this.props.navigation.navigate('NewDeck');
+    }
+
+    addExampleDeck() {
+        Alert.alert(
+            'UdaciCards',
+            "Please press 'OK' to add example deck",
+            [
+              {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+              {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ],
+            { cancelable: false }
+          )
+    }
+
     renderNoDecksView() {
         return (
             <View style={styles.container}>
-                <Text>There are no quiz decks created yet</Text>
-                <Text>Create New Deck</Text>
-                <Text>Add a default deck</Text>
+                <Text style={styles.appNoDecks}>Hi! There are no quiz decks created yet.</Text>
+                <View style={{height:20}}/>
+                <Text style={styles.appNoDecks}>Please press a button below to get started.</Text>
+                <View style={{height:20}}/>
+                <ImageButton style={{ padding: 10 }} imageName='add-to-list' onPress={()=>{this.addNewDeck()}}>
+                    Create New Deck
+                </ImageButton>
+                <ImageButton style={{ padding: 10 }} imageName='menu' onPress={this.addExampleDeck}>
+                    Add Example Deck
+                </ImageButton>
             </View>
         )
     }
@@ -42,11 +78,11 @@ class Decks extends Component {
 
         let arrayOfDecks = [];
 
-        for ( deck in decks ) {
-            arrayOfDecks.push( deck );
+        for (deck in decks) {
+            arrayOfDecks.push(deck);
         }
 
-        if ( arrayOfDecks.length === 0 ) {
+        if (arrayOfDecks.length === 0) {
             return this.renderNoDecksView();
         }
 
@@ -62,13 +98,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: white,
-        padding: 15,
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'flex-start'
     },
+    appNoDecks: {
+        color: blue,
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        width  : '90%',
+    }
 })
 
 function mapStateToProps(decks) {
     return {
-        decks : decks.decks 
+        decks: decks.decks
     }
 }
 

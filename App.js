@@ -10,7 +10,7 @@ import Decks from './components/Decks.js'
 import Deck from './components/Deck.js'
 import NewDeck from './components/NewDeck.js'
 import Scores from './components/Scores.js'
-import { white, purple} from './utils/colors'
+import { white, blue} from './utils/colors'
 
 const Tabs = TabNavigator({
   Decks : {
@@ -39,10 +39,10 @@ const Tabs = TabNavigator({
     header: null
   },
   tabBarOptions: {
-    activeTintColor: Platform.OS === 'ios' ? purple : white,
+    activeTintColor: Platform.OS === 'ios' ? blue : white,
     style: {
       height: 56,
-      backgroundColor: Platform.OS === 'ios' ? white : purple,
+      backgroundColor: Platform.OS === 'ios' ? white : blue,
       shadowColor: 'rgba(0, 0, 0, 0.24)',
       shadowOffset: {
         width: 0,
@@ -63,7 +63,7 @@ const MainNavigator = StackNavigator({
     navigationOptions: {
       headerTintColor: white,
       headerStyle: {
-        backgroundColor: purple,
+        backgroundColor: blue,
       }
     }
   }
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   statusBar: {
-    backgroundColor: purple,
+    backgroundColor: blue,
     height: Constants.statusBarHeight,
   },
 });
