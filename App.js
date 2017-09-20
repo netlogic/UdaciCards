@@ -1,8 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation'
 import { Entypo } from '@expo/vector-icons'
 import { Constants } from 'expo';
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import reducer from './reducers'
+import Decks from './components/Decks.js'
+import Deck from './components/Deck.js'
+import NewDeck from './components/NewDeck.js'
+import Scores from './components/Scores.js'
+import { white, purple} from './utils/colors'
 
 const Tabs = TabNavigator({
   Decks : {

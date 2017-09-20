@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { white } from './colors'
+import { white } from '../utils/colors'
 
-export default class Deck extends Component {
+import { AppLoading } from 'expo'
+
+class Deck extends Component {
+    state = {
+        ready: false,
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -19,3 +25,5 @@ const styles = StyleSheet.create({
         padding: 15,
     },
 })
+
+export default Deck;

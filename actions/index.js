@@ -1,16 +1,16 @@
 export const LOADED_DECKS = 'LOADED_DECKS'
 export const ADD_DECK = 'ADD_DECK'
 
-export function loadedDecks (entries) {
+export function loadedDecks (decks) {
   return {
     type: LOADED_DECKS,
-    entries,
+    decks,
   }
 }
 
-export function addDeck (entry) {
+export function addDeck (deck) {
   return {
     type: ADD_DECKS,
-    entry,
+    deck,
   }
 }
