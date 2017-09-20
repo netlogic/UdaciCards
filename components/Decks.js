@@ -22,12 +22,32 @@ class Decks extends Component {
             .then(() => this.setState(() => ({ ready: true })))
     }
 
+    renderNoDecksView() {
+        return (
+            <View style={styles.container}>
+                <Text>There are no quiz decks created yet</Text>
+                <Text>Create New Deck</Text>
+                <Text>Add a default deck</Text>
+            </View>
+        )
+    }
+
     render() {
         const { decks } = this.props
         const { ready } = this.state
 
         if (ready === false) {
             return <AppLoading />
+        }
+
+        let arrayOfDecks = [];
+
+        for ( deck in decks ) {
+            arrayOfDecks.push( deck );
+        }
+
+        if ( arrayOfDecks.length === 0 ) {
+            return this.renderNoDecksView();
         }
 
         return (
@@ -48,7 +68,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(decks) {
     return {
-        decks
+        decks : decks.decks 
     }
 }
 

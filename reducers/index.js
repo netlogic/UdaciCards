@@ -1,16 +1,16 @@
 import { LOADED_DECKS, ADD_DECK } from '../actions'
 
-function decks (state = {}, action) {
+function decks (state = { decks: {} }, action) {
   switch (action.type) {
     case LOADED_DECKS :
       return {
         ...state,
-        ...action.entries,
+        decks: action.entries,
       }
     case ADD_DECK :
       return {
         ...state,
-        ...action.entry
+        decks : action.entry
       }
     default :
       return state
