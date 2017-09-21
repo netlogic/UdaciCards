@@ -223,6 +223,7 @@ If this causes problems for you, you may want to try changing your terminal's co
 
 New decks are sorted (case insensitive) so if you add a new deck it may be at the end of the list.
 
+In my preparation for shipping phase I used the pngs from the lesson for iOS and Android in my app.json
 
 
 // code example for notify 
