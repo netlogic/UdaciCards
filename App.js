@@ -6,6 +6,7 @@ import { Constants } from 'expo';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import reducer from './reducers'
+import store from './store'
 import Decks from './components/Decks.js'
 import Deck from './components/Deck.js'
 import NewDeck from './components/NewDeck.js'
@@ -64,21 +65,6 @@ const MainNavigator = StackNavigator({
   }
 })
 
-function configureStore(initialState) {
-  const store = createStore(reducer, initialState);
-
-  if (module.hot) {
-    // Enable Webpack hot module replacement for reducers
-    module.hot.accept('./reducers', () => {
-      const nextRootReducer = require('./reducers/index');
-      store.replaceReducer(nextRootReducer);
-    });
-  }
-
-  return store;
-}
-
-const store = configureStore({ });
 
 export default class App extends React.Component {
   render() {

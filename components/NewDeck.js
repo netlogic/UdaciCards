@@ -4,6 +4,8 @@ import { white, blue } from '../utils/colors'
 import { connect } from 'react-redux'
 import ImageButton from './ImageButton'
 import {addDeck} from '../actions'
+import store from '../store'
+import { saveAllDecks } from '../utils/apis.js'
 
 class NewDeck extends Component {
     constructor(props) {
@@ -47,6 +49,9 @@ class NewDeck extends Component {
                         // add this deck
                         //
                         this.props.dispatch( addDeck( this.state.text ) );
+                        // save it out
+                        //
+                        saveAllDecks( store.getState().decks );
                         this.setState( {text: "" });
                         // go home
                         this.props.navigation.navigate('Decks');
