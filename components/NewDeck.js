@@ -7,19 +7,22 @@ import ImageButton from './ImageButton'
 class NewDeck extends Component {
     constructor(props) {
         super(props);
-        this.state = { title : '' } ;
+        this.state = { text : '' } ;
         this.addNewDeck = this.addNewDeck.bind(this);
     }
 
     addNewDeck() {
         let found = false;
+        let check = this.state.text.toUpperCase();
+
         for ( let title in this.props.decks ) {
-            if ( title.toUpperCase() === this.state.title ) {
+            if ( title.toUpperCase() === check ) {
                 found = true;
+                break;
             }
         }
         if ( found ) {
-            errorDeckAlreadyExists();
+            this.errorDeckAlreadyExists();
             return;
         }
     }
@@ -77,13 +80,14 @@ const styles = StyleSheet.create({
         fontSize : 24,
         margin : 20,
         color : blue,
+        textAlign : 'center',
 
     }
 })
 
 function mapStateToProps(dataState, ownProps) {
     return {
-        decks : dataState.decks
+        decks : dataState.decks.decks
     };
 }    
 
