@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, StyleSheet } from 'react-native'
+import { View, Alert, Text, TextInput, StyleSheet } from 'react-native'
 import { white, blue } from '../utils/colors'
 import { connect } from 'react-redux'
 import ImageButton from './ImageButton'
@@ -12,7 +12,30 @@ class NewDeck extends Component {
     }
 
     addNewDeck() {
+        let found = false;
+        for ( let title in this.props.decks ) {
+            if ( title.toUpperCase() === this.state.title ) {
+                found = true;
+            }
+        }
+        if ( found ) {
+            errorDeckAlreadyExists();
+            return;
+        }
+    }
 
+    errorDeckAlreadyExists() {
+        Alert.alert(
+            'UdaciCards',
+            "This deck name already exists please try another!",
+            [
+                {
+                    text: 'OK', onPress: () => {
+                    }
+                },
+            ],
+            { cancelable: false }
+        )
     }
 
     render() {
@@ -48,6 +71,7 @@ const styles = StyleSheet.create({
         paddingLeft : 10,
         paddingRight : 10 , 
         margin : 10,
+        textAlign : 'center',
     },
     titleLine : {
         fontSize : 24,
@@ -59,6 +83,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(dataState, ownProps) {
     return {
+        decks : dataState.decks
     };
 }    
 
