@@ -10,31 +10,14 @@ import { saveAllDecks } from '../utils/apis.js'
 class Quiz extends Component {
     constructor(props) {
         super(props);
-        this.state = { question: '', answer: '', editable: true };
-        this.addNewQuestion = this.addNewQuestion.bind(this);
+        this.questionOrder = null;
+        this.state = { score: 0, questionIndex: 0, };
     }
 
     static navigationOptions = ({ navigation }) => ({
-        header : null
+        header: null
     });
 
-    addNewQuestion() {
-        let found = false;
-        let check = this.state.question.toUpperCase();
-
-        Keyboard.dismiss();
-
-
-        if (check.length === 0) {
-            this.showEnterSomething();
-            return;
-        }
-        if (this.state.answer.length === 0) {
-            this.showEnterSomething('Please enter the answer!');
-            return;
-        }
-        this.checkToAdd();
-    }
 
     checkToAdd() {
         this.setState({ editable: false });
@@ -96,7 +79,45 @@ class Quiz extends Component {
         )
     }
 
+    deck() {
+        let dataState = store.getState();
+        return dataState.decks.decks[this.props.title];
+    }
+
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+    getRandomIntInclusive(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+    }
+
+    // create a random array of indexes for the questions
+    ensureQuestionOrder() {
+        let questions = this.deck().questions;
+        if (this.questionOrder && questions.length === this.questionOrder.length) {
+            return; // questions are good
+        }
+        this.questionOrder = [];
+        while (this.questionOrder.length < questions.length) {
+            let rndIndex = this.getRandomIntInclusive(0, questions.length - 1);
+            let found = false;
+            for (let q of this.questionOrder) {
+                if (q.index === rndIndex) {
+                    found = true;
+                    break;
+                }
+            }
+            if ( found ) {
+                continue;
+            }
+            this.questionOrder.push({ index: rndIndex });
+        }
+        console.log( this.questionOrder );
+    }
+
     render() {
+        this.ensureQuestionOrder();
+
         return (
             <ScrollView style={styles.container}>
                 <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
