@@ -11,13 +11,18 @@ class Quiz extends Component {
     constructor(props) {
         super(props);
         this.questionOrder = null;
-        this.state = { score: 0, questionIndex: 0, };
+        this.state = { score: 0, questionIndex: 0, showAnswer: false, currentTime : 0 };
+        this.showAnswer = this.showAnswer.bind(this);
     }
 
     static navigationOptions = ({ navigation }) => ({
         header: null
     });
 
+
+    showAnswer() {
+        this.setState( { showAnswer : true } );
+    }
 
     checkToAdd() {
         this.setState({ editable: false });
@@ -107,47 +112,84 @@ class Quiz extends Component {
                     break;
                 }
             }
-            if ( found ) {
+            if (found) {
                 continue;
             }
             this.questionOrder.push({ index: rndIndex });
         }
-        console.log( this.questionOrder );
+        console.log(this.questionOrder);
+    }
+
+    percentRight() {
+        let totalQ  = this.deck().questions.length;
+        let percent = parseInt( this.state.score / totalQ * 100 );
+        if ( percent === 0 ) {
+            return '-';
+        }
+        return this.state.score  + " (" + percent + "%)";
+    }
+
+    componentDidMount() {
+        if ( !this.startTime ) {
+            this.startTime = (new Date()).getTime();
+        }
+        this.interval = setInterval( ()=> { 
+            this.setState( { currentTime : (new Date()).getTime()  } );
+        }, 1000 )
+    }
+
+    componentWillUnmount() {
+        clearInterval( this.interval );
     }
 
     render() {
         this.ensureQuestionOrder();
 
+        let questionIndex = this.state.questionIndex;
+        let question = this.deck().questions[this.questionOrder[questionIndex].index];
+        let totalQ  = this.deck().questions.length;
+
+        let timeDisplay;
+
+        if ( this.state.currentTime !== 0 ) {
+            let seconds = this.state.currentTime - this.startTime;
+            seconds = parseInt( seconds / 1000 );
+            timeDisplay = (
+                <Text>Time: {seconds}</Text>
+            )
+        }
+    
         return (
             <ScrollView style={styles.container}>
-                <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
-                    <KeyboardAvoidingView behavior="padding" >
-                        <Text style={styles.titleLine}>{`${this.props.title}`}</Text>
-                        <Text style={styles.title}>Question:</Text>
-                        <TextInput
-                            numberOfLines={2}
-                            maxLength={128}
-                            multiline={true}
-                            placeHolder='Question'
-                            style={styles.titleInput}
-                            onChangeText={(question) => this.setState({ question })}
-                            value={this.state.question} />
-                        <Text style={styles.title}>Answer:</Text>
-                        <TextInput
-                            numberOfLines={10}
-                            maxLength={256}
-                            multiline={true}
-                            placeHolder='Answer'
-                            style={styles.titleAnswer}
-                            onChangeText={(answer) => this.setState({ answer })}
-                            value={this.state.answer} />
-                        <ImageButton style={{ padding: 10 }} imageName='plus' onPress={this.addNewQuestion}>
-                            Add Question
-                </ImageButton>
-                        <View style={{ height: 60 }} />
-                    </KeyboardAvoidingView>
-                </TouchableWithoutFeedback>
-            </ScrollView>
+                <View>
+                    <Text style={styles.titleLine}>Quiz:{`${this.props.title}`}</Text>
+                    {timeDisplay}
+                    <Text style={styles.titleLine}>{`Question: ${questionIndex+1} of ${totalQ}`}</Text>
+                    <Text style={styles.titleLine}>{`Correct Answers: ${this.percentRight()}`}</Text>
+                    {!this.state.showAnswer && (
+                        <View>
+                            <Text style={styles.title}>{question.question}</Text>
+                            <ImageButton style={{ padding: 10 }} imageName='magnifying-glass' onPress={this.showAnswer}>
+                                Show Answer
+                            </ImageButton>
+                        </View>
+                    )
+                    }
+                    {this.state.showAnswer && (
+                        <View>
+                        <Text style={styles.title}>{question.answer}</Text>
+                        <ImageButton style={{ padding: 10 }} imageName='check' onPress={this.addNewQuestion}>
+                                CORRECT!
+                        </ImageButton>
+                        <ImageButton style={{ padding: 10 }} imageName='cross' onPress={this.addNewQuestion}>
+                                INCORRECT!
+                        </ImageButton>
+                        </View>
+                    )
+                    }
+                    <View style={{ height: 60 }} />
+                </View>
+            </ScrollView >
 
         )
     }
