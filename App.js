@@ -14,6 +14,7 @@ import NewQuestion from './components/NewQuestion.js'
 import Scores from './components/Scores.js'
 import { white, gray, blue } from './utils/colors'
 import {setStackNavigator} from './actions'
+import Quiz from './components/Quiz'
 
 const Tabs = TabNavigator({
   Decks: {
@@ -68,6 +69,11 @@ const MainNavigator = StackNavigator({
   },
   NewQuestion : {
     screen : NewQuestion,
+  },
+  Quiz : {
+    screen : Quiz,
+    headerMode : 'none',
+
   }
 })
 
