@@ -3,6 +3,7 @@ import { View, Alert, Text, TextInput, StyleSheet } from 'react-native'
 import { white, blue } from '../utils/colors'
 import { connect } from 'react-redux'
 import ImageButton from './ImageButton'
+import {addDeck} from '../actions'
 
 class NewDeck extends Component {
     constructor(props) {
@@ -15,6 +16,11 @@ class NewDeck extends Component {
         let found = false;
         let check = this.state.text.toUpperCase();
 
+        if ( check.length === 0 ) {
+            this.showEnterSomething();
+            return;
+        }
+
         for ( let title in this.props.decks ) {
             if ( title.toUpperCase() === check ) {
                 found = true;
@@ -25,7 +31,47 @@ class NewDeck extends Component {
             this.errorDeckAlreadyExists();
             return;
         }
+
+        this.checkToAdd();
     }
+
+    checkToAdd() {
+        Alert.alert(
+            'UdaciCards',
+            `Are you sure you to add a new deck called '${this.state.text}'?`,
+            [
+                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                
+                {
+                    text: 'OK', onPress: () => {
+                        // add this deck
+                        //
+                        this.props.dispatch( addDeck( this.state.text ) );
+                        this.setState( {text: "" });
+                        // go home
+                        this.props.navigation.navigate('Decks');
+                    }
+                },
+            ],
+            { cancelable: false }
+        )
+    }
+
+    showEnterSomething()
+    {
+        Alert.alert(
+            'UdaciCards',
+            "Please enter a title!",
+            [
+                {
+                    text: 'OK', onPress: () => {
+                    }
+                },
+            ],
+            { cancelable: false }
+        )
+    }
+    
 
     errorDeckAlreadyExists() {
         Alert.alert(

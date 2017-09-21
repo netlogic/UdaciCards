@@ -10,12 +10,19 @@ function decks(state = { decks: {} }, action) {
             {
                 let obj = { ...state };
                 obj.decks = action.decks;
+                obj.ts =  (new Date).getTime();
                 return obj;
             }
         case ADD_DECK:
-            return {
-                ...state,
-                decks: action.entry
+            {
+                let obj = { ...state };
+                let decks = obj.decks;
+                decks[action.title] = {
+                    title : action.title,
+                    questions : []
+                }
+                obj.ts =  (new Date).getTime();
+                return obj;
             }
         default:
             return state

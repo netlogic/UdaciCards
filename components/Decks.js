@@ -137,7 +137,9 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(dataState) {
     return {
-        decks: dataState.decks.decks
+        decks: dataState.decks.decks,
+        count : dataState.decks.decks ? dataState.decks.decks.length : 0,
+        ts : dataState.decks.ts,
     }
 }
 

@@ -11,12 +11,13 @@ export function loadedDecks (decks) {
   }
 }
 
-export function addDeck (deck) {
+export function addDeck (title) {
   return {
-    type: ADD_DECKS,
-    deck,
+    type: ADD_DECK,
+    title : title,
   }
 }
+
 export function setStackNavigator( navigator ) {
     return {
         type : SET_STACK_NAVIGATOR,
