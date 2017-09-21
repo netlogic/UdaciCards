@@ -1,4 +1,7 @@
-import { LOADED_DECKS, ADD_DECK, DELETE_DECK, SET_STACK_NAVIGATOR} from '../actions'
+import {
+    LOADED_DECKS, ADD_DECK, DELETE_DECK,
+    ADD_QUESTION, SET_STACK_NAVIGATOR
+} from '../actions'
 
 
 import { combineReducers } from 'redux'
@@ -10,7 +13,7 @@ function decks(state = { decks: {} }, action) {
             {
                 let obj = { ...state };
                 obj.decks = action.decks;
-                obj.ts =  (new Date).getTime();
+                obj.ts = (new Date).getTime();
                 return obj;
             }
         case ADD_DECK:
@@ -18,20 +21,29 @@ function decks(state = { decks: {} }, action) {
                 let obj = { ...state };
                 let decks = obj.decks;
                 decks[action.title] = {
-                    title : action.title,
-                    questions : []
+                    title: action.title,
+                    questions: [],
+                    ts: decks[action.title].ts 
                 }
-                obj.ts =  (new Date).getTime();
+                obj.ts = (new Date).getTime();
                 return obj;
             }
         case DELETE_DECK:
-        {
-            let obj = { ...state };
-            let decks = obj.decks;
-            delete decks[action.title];
-            obj.ts =  (new Date).getTime();
-            return obj;
-        }
+            {
+                let obj = { ...state };
+                let decks = obj.decks;
+                delete decks[action.title];
+                obj.ts = (new Date).getTime();
+                return obj;
+            }
+        case ADD_QUESTION:
+            {
+                let obj = Object.assign(  { ts : (new Date()).getTime() } , state )
+                let decks = obj.decks;
+                decks[action.title] = Object.assign(  { ts  : (new Date()).getTime() }, decks[action.title])
+                decks[action.title].questions.push( action.question );
+                return obj;
+            }
         default:
             return state
     }

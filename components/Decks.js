@@ -102,7 +102,7 @@ class Decks extends Component {
                     data={arrayOfDecks}
                     renderItem={( item ) => {
                         return (
-                            <Deck  key={item.index} dispatch={this.props.dispatch} mini={true} deck={item.item}/>
+                            <Deck  key={item.index+"_"+item.item.questions.length} dispatch={this.props.dispatch} mini={true} deck={item.item}/>
                         )
                     }}
                 />
@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
 })
 
 function mapStateToProps(dataState) {
+    console.log("ts decks = "  , dataState.decks.ts)
     return {
         decks: dataState.decks.decks,
         count : dataState.decks.decks ? dataState.decks.decks.length : 0,

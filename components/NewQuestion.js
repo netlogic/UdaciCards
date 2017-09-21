@@ -1,17 +1,17 @@
 import React, { Component } from 'react'
-import { View, Alert, Text, TextInput, StyleSheet } from 'react-native'
+import { View, Keyboard, ScrollView, TouchableWithoutFeedback, KeyboardAvoidingView, Alert, Text, TextInput, StyleSheet } from 'react-native'
 import { white, blue } from '../utils/colors'
 import { connect } from 'react-redux'
 import ImageButton from './ImageButton'
-import {addDeck} from '../actions'
+import { addQuestionToDeck } from '../actions'
 import store from '../store'
 import { saveAllDecks } from '../utils/apis.js'
 
 class NewQuestion extends Component {
     constructor(props) {
         super(props);
-        this.state = { text : '' } ;
-        this.addNewDeck = this.addNewDeck.bind(this);
+        this.state = { question: '', answer: '', editable: true };
+        this.addNewQuestion = this.addNewQuestion.bind(this);
     }
 
     static navigationOptions = ({ navigation }) => ({
@@ -21,47 +21,48 @@ class NewQuestion extends Component {
         headerStyle: { backgroundColor: blue }
     });
 
-    addNewDeck() {
+    addNewQuestion() {
         let found = false;
-        let check = this.state.text.toUpperCase();
+        let check = this.state.question.toUpperCase();
 
-        if ( check.length === 0 ) {
+        Keyboard.dismiss();
+
+
+        if (check.length === 0) {
             this.showEnterSomething();
             return;
         }
-
-        for ( let title in this.props.decks ) {
-            if ( title.toUpperCase() === check ) {
-                found = true;
-                break;
-            }
-        }
-        if ( found ) {
-            this.errorDeckAlreadyExists();
+        if (this.state.answer.length === 0) {
+            this.showEnterSomething('Please enter the answer!');
             return;
         }
-
         this.checkToAdd();
     }
 
     checkToAdd() {
+        this.setState({ editable: false });
         Alert.alert(
             'UdaciCards',
-            `Are you sure you to add a new deck called '${this.state.text}'?`,
+            `Are you sure you want to add the question '${this.state.question}'?`,
             [
-                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-                
+                {
+                    text: 'Cancel', onPress: () => {
+                        this.setState({ editable: true });
+                        console.log('Cancel Pressed')
+                    }, style: 'cancel'
+                },
+
                 {
                     text: 'OK', onPress: () => {
                         // add this deck
                         //
-                        this.props.dispatch( addDeck( this.state.text ) );
+                        this.props.dispatch(addQuestionToDeck(this.props.title, this.state.question, this.state.answer));
                         // save it out
                         //
-                        saveAllDecks( store.getState().decks );
-                        this.setState( {text: "" });
+                        saveAllDecks(store.getState().decks);
+                        this.setState({ text: "" });
                         // go home
-                        this.props.navigation.navigate('Decks');
+                        this.props.navigation.goBack();
                     }
                 },
             ],
@@ -69,11 +70,10 @@ class NewQuestion extends Component {
         )
     }
 
-    showEnterSomething()
-    {
+    showEnterSomething(msg) {
         Alert.alert(
             'UdaciCards',
-            "Please enter a title!",
+            msg || "Please enter a question!",
             [
                 {
                     text: 'OK', onPress: () => {
@@ -83,7 +83,7 @@ class NewQuestion extends Component {
             { cancelable: false }
         )
     }
-    
+
 
     errorDeckAlreadyExists() {
         Alert.alert(
@@ -101,19 +101,36 @@ class NewQuestion extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <Text style={styles.titleLine}>Please enter the title of your new deck</Text>
-                <TextInput
-                    numberOfLines={1}
-                    maxLength={64}
-                    placeHolder='New title for Deck'
-                    style={styles.titleInput}
-                    onChangeText={(text) => this.setState({text})}
-                    value={this.state.text}/>
-                <ImageButton style={{ padding: 10 }} imageName='add-to-list' onPress={this.addNewDeck}>
-                    Add New Deck
+            <ScrollView style={styles.container}>
+                <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
+                    <KeyboardAvoidingView behavior="padding" >
+                        <Text style={styles.titleLine}>{`${this.props.title}`}</Text>
+                        <Text style={styles.title}>Question:</Text>
+                        <TextInput
+                            numberOfLines={2}
+                            maxLength={128}
+                            multiline={true}
+                            placeHolder='Question'
+                            style={styles.titleInput}
+                            onChangeText={(question) => this.setState({ question })}
+                            value={this.state.question} />
+                        <Text style={styles.title}>Answer:</Text>
+                        <TextInput
+                            numberOfLines={10}
+                            maxLength={256}
+                            multiline={true}
+                            placeHolder='Answer'
+                            style={styles.titleAnswer}
+                            onChangeText={(answer) => this.setState({ answer })}
+                            value={this.state.answer} />
+                        <ImageButton style={{ padding: 10 }} imageName='plus' onPress={this.addNewQuestion}>
+                            Add Question
                 </ImageButton>
-            </View>
+                        <View style={{ height: 60 }} />
+                    </KeyboardAvoidingView>
+                </TouchableWithoutFeedback>
+            </ScrollView>
+
         )
     }
 }
@@ -124,31 +141,45 @@ const styles = StyleSheet.create({
         backgroundColor: white,
         padding: 15,
     },
-    titleInput : {
-        height: 40, 
-        borderColor: blue, 
+    titleInput: {
+        height: 40,
+        borderColor: blue,
         borderWidth: 1,
-        color : blue ,
-        paddingLeft : 10,
-        paddingRight : 10 , 
-        margin : 10,
-        textAlign : 'center',
+        color: blue,
+        paddingLeft: 10,
+        paddingRight: 10,
+        margin: 10,
+        textAlign: 'center',
     },
-    titleLine : {
-        fontSize : 24,
-        margin : 20,
-        color : blue,
-        textAlign : 'center',
+    titleAnswer: {
+        height: 120,
+        borderColor: blue,
+        borderWidth: 1,
+        color: blue,
+        paddingLeft: 10,
+        paddingRight: 10,
+        margin: 10,
+        textAlign: 'center',
+    },
+    titleLine: {
+        fontSize: 24,
+        margin: 20,
+        color: blue,
+        textAlign: 'center',
 
     }
 })
 
 function mapStateToProps(dataState, ownProps) {
+    let title;
+    if (ownProps.navigation) {
+        title = ownProps.navigation.state.params.title;
+    }
     return {
-        decks : dataState.decks.decks,
-        navigate : dataState.navigation.stackNavigator
+        title: title,
+        navigate: dataState.navigation.stackNavigator
     };
-}    
+}
 
 export default connect(
     mapStateToProps,
