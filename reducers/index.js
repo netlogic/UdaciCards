@@ -1,4 +1,4 @@
-import { LOADED_DECKS, ADD_DECK, SET_STACK_NAVIGATOR} from '../actions'
+import { LOADED_DECKS, ADD_DECK, DELETE_DECK, SET_STACK_NAVIGATOR} from '../actions'
 
 
 import { combineReducers } from 'redux'
@@ -24,6 +24,14 @@ function decks(state = { decks: {} }, action) {
                 obj.ts =  (new Date).getTime();
                 return obj;
             }
+        case DELETE_DECK:
+        {
+            let obj = { ...state };
+            let decks = obj.decks;
+            delete decks[action.title];
+            obj.ts =  (new Date).getTime();
+            return obj;
+        }
         default:
             return state
     }

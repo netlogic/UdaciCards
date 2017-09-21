@@ -1,6 +1,7 @@
 export const LOADED_DECKS = 'LOADED_DECKS'
 export const ADD_DECK = 'ADD_DECK'
 export const SET_STACK_NAVIGATOR = 'SET_STACK_NAVIGATOR';
+export const DELETE_DECK = 'DELETE_DECK';
 
 import { saveAllDecks } from '../utils/apis.js'
 
@@ -9,6 +10,13 @@ export function loadedDecks (decks) {
     type: LOADED_DECKS,
     decks : decks ? decks.decks : null ,
   }
+}
+
+export function deleteDeck( title ) {
+    return {
+        type: DELETE_DECK,
+        title : title,
+    }
 }
 
 export function addDeck (title) {
