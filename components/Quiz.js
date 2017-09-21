@@ -11,8 +11,12 @@ class Quiz extends Component {
     constructor(props) {
         super(props);
         this.questionOrder = null;
-        this.state = { score: 0, questionIndex: 0, showAnswer: false, currentTime : 0 };
+        this.state = { score: 0, questionIndex: 0, showAnswer: false, currentTime: 0 };
         this.showAnswer = this.showAnswer.bind(this);
+        this.correctAnswer = this.correctAnswer.bind(this);
+        this.wrongAnswer = this.wrongAnswer.bind(this);
+        this.exitQuiz = this.exitQuiz.bind(this);
+        this.playAgain = this.playAgain.bind(this);
     }
 
     static navigationOptions = ({ navigation }) => ({
@@ -21,7 +25,27 @@ class Quiz extends Component {
 
 
     showAnswer() {
-        this.setState( { showAnswer : true } );
+        this.setState(previousState => {
+            return { ...previousState, showAnswer: true };
+        });
+    }
+
+    playAgain() {
+        this.startTime = (new Date()).getTime();
+        this.questionOrder = null; // juggle the question order
+        this.setState(previousState => {
+            return {
+                ...previousState,
+                questionIndex: 0,
+                showAnswer: false,
+                score : 0,
+                currentTime : (new Date()).getTime()
+            }
+        });
+    }
+
+    exitQuiz() {
+        this.props.navigation.goBack();
     }
 
     checkToAdd() {
@@ -84,6 +108,28 @@ class Quiz extends Component {
         )
     }
 
+    wrongAnswer() {
+        this.setState(previousState => {
+            return {
+                ...previousState,
+                questionIndex: previousState.questionIndex + 1,
+                showAnswer: false
+            }
+        });
+
+    }
+
+    correctAnswer() {
+        this.setState(previousState => {
+            return {
+                ...previousState,
+                score: previousState.score + 1,
+                questionIndex: previousState.questionIndex + 1,
+                showAnswer: false
+            }
+        });
+    }
+
     deck() {
         let dataState = store.getState();
         return dataState.decks.decks[this.props.title];
@@ -121,50 +167,69 @@ class Quiz extends Component {
     }
 
     percentRight() {
-        let totalQ  = this.deck().questions.length;
-        let percent = parseInt( this.state.score / totalQ * 100 );
-        if ( percent === 0 ) {
+        let totalQ = this.deck().questions.length;
+        let percent = parseInt(this.state.score / totalQ * 100);
+        if (percent === 0) {
             return '-';
         }
-        return this.state.score  + " (" + percent + "%)";
+        return this.state.score + " (" + percent + "%)";
     }
 
     componentDidMount() {
-        if ( !this.startTime ) {
+        if (!this.startTime) {
             this.startTime = (new Date()).getTime();
         }
-        this.interval = setInterval( ()=> { 
-            this.setState( { currentTime : (new Date()).getTime()  } );
-        }, 1000 )
+        this.interval = setInterval(() => {
+            this.setState({ currentTime: (new Date()).getTime() });
+        }, 1000)
     }
 
     componentWillUnmount() {
-        clearInterval( this.interval );
+        clearInterval(this.interval);
+    }
+
+    renderQuizIsDone() {
+        return (
+            <View>
+                <Text>You did it!!</Text>
+                <ImageButton style={{ padding: 10 }} imageName='shuffle' onPress={this.playAgain}>
+                    PLAY AGAIN!
+                </ImageButton>
+                <ImageButton style={{ padding: 10 }} imageName='reply' onPress={this.exitQuiz}>
+                    EXIT
+                </ImageButton>
+            </View>
+        )
     }
 
     render() {
         this.ensureQuestionOrder();
 
         let questionIndex = this.state.questionIndex;
+        let totalQ = this.deck().questions.length;
+        if (questionIndex === totalQ) {
+            return this.renderQuizIsDone();
+        }
+
         let question = this.deck().questions[this.questionOrder[questionIndex].index];
-        let totalQ  = this.deck().questions.length;
+
 
         let timeDisplay;
 
-        if ( this.state.currentTime !== 0 ) {
+        if (this.state.currentTime !== 0) {
             let seconds = this.state.currentTime - this.startTime;
-            seconds = parseInt( seconds / 1000 );
+            seconds = parseInt(seconds / 1000);
             timeDisplay = (
                 <Text>Time: {seconds}</Text>
             )
         }
-    
+
         return (
             <ScrollView style={styles.container}>
                 <View>
-                    <Text style={styles.titleLine}>Quiz:{`${this.props.title}`}</Text>
                     {timeDisplay}
-                    <Text style={styles.titleLine}>{`Question: ${questionIndex+1} of ${totalQ}`}</Text>
+                    <Text style={styles.titleLine}>Quiz:{`${this.props.title}`}</Text>
+                    <Text style={styles.titleLine}>{`Question: ${questionIndex + 1} of ${totalQ}`}</Text>
                     <Text style={styles.titleLine}>{`Correct Answers: ${this.percentRight()}`}</Text>
                     {!this.state.showAnswer && (
                         <View>
@@ -177,13 +242,13 @@ class Quiz extends Component {
                     }
                     {this.state.showAnswer && (
                         <View>
-                        <Text style={styles.title}>{question.answer}</Text>
-                        <ImageButton style={{ padding: 10 }} imageName='check' onPress={this.addNewQuestion}>
+                            <Text style={styles.title}>{question.answer}</Text>
+                            <ImageButton style={{ padding: 10 }} imageName='check' onPress={this.correctAnswer}>
                                 CORRECT!
-                        </ImageButton>
-                        <ImageButton style={{ padding: 10 }} imageName='cross' onPress={this.addNewQuestion}>
+                            </ImageButton>
+                            <ImageButton style={{ padding: 10 }} imageName='cross' onPress={this.wrongAnswer}>
                                 INCORRECT!
-                        </ImageButton>
+                            </ImageButton>
                         </View>
                     )
                     }
