@@ -16,8 +16,8 @@ class Decks extends Component {
 
     constructor(props) {
         super(props);
-        console.log(props);
-        console.log("create decks")
+        //console.log(props);
+        //console.log("create decks")
 
         this.addNewDeck = this.addNewDeck.bind(this);
         this.addExampleDeck = this.addExampleDeck.bind(this);
@@ -42,7 +42,7 @@ class Decks extends Component {
             'UdaciCards',
             "Please press 'OK' to add example deck",
             [
-                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                { text: 'Cancel', onPress: () => {}, style: 'cancel' },
                 {
                     text: 'OK', onPress: () => {
                         this.props.dispatch(addExampleDecks());
@@ -61,10 +61,10 @@ class Decks extends Component {
                 <Text style={styles.appNoDecks}>Please press a button below to get started.</Text>
                 <View style={{ height: 20 }} />
                 <ImageButton style={{ padding: 10 }} imageName='add-to-list' onPress={() => { this.addNewDeck() }}>
-                    Create New Deck
+                    Create Deck
                 </ImageButton>
                 <ImageButton style={{ padding: 10 }} imageName='menu' onPress={this.addExampleDeck}>
-                    Add Example Decks
+                    Add Demo Decks
                 </ImageButton>
             </View>
         )
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
 })
 
 function mapStateToProps(dataState) {
-    console.log("ts decks = "  , dataState.decks.ts)
+    //console.log("ts decks = "  , dataState.decks.ts)
     return {
         decks: dataState.decks.decks,
         count : dataState.decks.decks ? dataState.decks.decks.length : 0,

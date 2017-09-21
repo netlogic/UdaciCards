@@ -13,7 +13,7 @@ function decks(state = { decks: {} }, action) {
             {
                 let obj = { ...state };
                 obj.decks = action.decks;
-                obj.ts = (new Date).getTime();
+                obj.ts = (new Date()).getTime();
                 return obj;
             }
         case ADD_DECK:
@@ -23,9 +23,9 @@ function decks(state = { decks: {} }, action) {
                 decks[action.title] = {
                     title: action.title,
                     questions: [],
-                    ts: decks[action.title].ts 
+                    ts:  (new Date()).getTime()
                 }
-                obj.ts = (new Date).getTime();
+                obj.ts = (new Date()).getTime();
                 return obj;
             }
         case DELETE_DECK:
@@ -33,7 +33,7 @@ function decks(state = { decks: {} }, action) {
                 let obj = { ...state };
                 let decks = obj.decks;
                 delete decks[action.title];
-                obj.ts = (new Date).getTime();
+                obj.ts = (new Date()).getTime();
                 return obj;
             }
         case ADD_QUESTION:

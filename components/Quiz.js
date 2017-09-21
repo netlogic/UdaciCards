@@ -157,7 +157,7 @@ class Quiz extends Component {
             }
             this.questionOrder.push({ index: rndIndex });
         }
-        console.log(this.questionOrder);
+        //console.log(this.questionOrder);
     }
 
     percentRight() {

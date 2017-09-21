@@ -41,15 +41,17 @@ class NewDeck extends Component {
 
     checkToAdd() {
 
+        let title = this.state.text.trim();
+
         this.setState({ editable: false });
         Alert.alert(
             'UdaciCards',
-            `Are you sure you to add a new deck called '${this.state.text}'?`,
+            `Are you sure you to add a new deck called '${title}'?`,
             [
                 {
                     text: 'Cancel', onPress: () => {
                         this.setState({ editable: true });
-                        console.log('Cancel Pressed')
+                        //console.log('Cancel Pressed')
                     }, style: 'cancel'
                 },
 
@@ -58,7 +60,7 @@ class NewDeck extends Component {
 
                         // add this deck
                         //
-                        this.props.dispatch(addDeck(this.state.text));
+                        this.props.dispatch(addDeck(title));
 
                         this.setState({ text: "", editable: false });
 

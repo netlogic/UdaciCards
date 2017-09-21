@@ -73,7 +73,7 @@ class Deck extends Component {
             'UdaciCards',
             `Are you sure you want to delete this deck?  It cannot be undone.`,
             [
-                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                { text: 'Cancel', onPress: () => {}, style: 'cancel' },
                 
                 {
                     text: 'OK', onPress: () => {

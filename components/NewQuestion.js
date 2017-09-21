@@ -48,7 +48,7 @@ class NewQuestion extends Component {
                 {
                     text: 'Cancel', onPress: () => {
                         this.setState({ editable: true });
-                        console.log('Cancel Pressed')
+                        //console.log('Cancel Pressed')
                     }, style: 'cancel'
                 },
 
@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         margin: 10,
         textAlign: 'center',
+        fontSize : 18,
     },
     titleAnswer: {
         height: 120,
@@ -160,6 +161,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         margin: 10,
         textAlign: 'center',
+        fontSize : 18,
     },
     titleLine: {
         fontSize: 24,
