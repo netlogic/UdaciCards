@@ -102,7 +102,7 @@ class Decks extends Component {
                     data={arrayOfDecks}
                     renderItem={( item ) => {
                         return (
-                            <Deck  key={item.index} dispatch={this.props.dispatch} deck={item.item}/>
+                            <Deck  key={item.index} dispatch={this.props.dispatch} mini={true} deck={item.item}/>
                         )
                     }}
                 />
@@ -135,9 +135,9 @@ const styles = StyleSheet.create({
     }
 })
 
-function mapStateToProps(decks) {
+function mapStateToProps(dataState) {
     return {
-        decks: decks.decks
+        decks: dataState.decks.decks
     }
 }
 

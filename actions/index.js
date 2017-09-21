@@ -1,5 +1,6 @@
 export const LOADED_DECKS = 'LOADED_DECKS'
 export const ADD_DECK = 'ADD_DECK'
+export const SET_STACK_NAVIGATOR = 'SET_STACK_NAVIGATOR';
 
 import { saveAllDecks } from '../utils/apis.js'
 
@@ -15,6 +16,12 @@ export function addDeck (deck) {
     type: ADD_DECKS,
     deck,
   }
+}
+export function setStackNavigator( navigator ) {
+    return {
+        type : SET_STACK_NAVIGATOR,
+        navigator
+    }
 }
 
 export function addExampleDecks ( ) {

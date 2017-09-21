@@ -10,24 +10,25 @@ import Decks from './components/Decks.js'
 import Deck from './components/Deck.js'
 import NewDeck from './components/NewDeck.js'
 import Scores from './components/Scores.js'
-import { white, gray, blue} from './utils/colors'
+import { white, gray, blue } from './utils/colors'
+import {setStackNavigator} from './actions'
 
 const Tabs = TabNavigator({
-  Decks : {
+  Decks: {
     screen: Decks,
     navigationOptions: {
       tabBarLabel: 'DECKS',
       tabBarIcon: ({ tintColor }) => <Entypo name='list' size={30} color={tintColor} />
     },
   },
-  NewDeck : {
+  NewDeck: {
     screen: NewDeck,
     navigationOptions: {
-    tabBarLabel: 'New Deck',
+      tabBarLabel: 'New Deck',
       tabBarIcon: ({ tintColor }) => <Entypo name='add-to-list' size={30} color={tintColor} />
     },
   },
-  Scores : {
+  Scores: {
     screen: Scores,
     navigationOptions: {
       tabBarLabel: 'Scores',
@@ -35,24 +36,24 @@ const Tabs = TabNavigator({
     }
   }
 }, {
-  navigationOptions: {
-    header: null
-  },
-  tabBarOptions: {
-    activeTintColor: Platform.OS === 'ios' ? blue : white,
-    style: {
-      height: 56,
-      backgroundColor: Platform.OS === 'ios' ? white : blue,
-      shadowColor: 'rgba(0, 0, 0, 0.24)',
-      shadowOffset: {
-        width: 0,
-        height: 3
-      },
-      shadowRadius: 6,
-      shadowOpacity: 1
+    navigationOptions: {
+      header: null
+    },
+    tabBarOptions: {
+      activeTintColor: Platform.OS === 'ios' ? blue : white,
+      style: {
+        height: 56,
+        backgroundColor: Platform.OS === 'ios' ? white : blue,
+        shadowColor: 'rgba(0, 0, 0, 0.24)',
+        shadowOffset: {
+          width: 0,
+          height: 3
+        },
+        shadowRadius: 6,
+        shadowOpacity: 1
+      }
     }
-  }
-})
+  })
 
 const MainNavigator = StackNavigator({
   Home: {
@@ -69,15 +70,35 @@ const MainNavigator = StackNavigator({
   }
 })
 
+function configureStore(initialState) {
+  const store = createStore(reducer, initialState);
+
+  if (module.hot) {
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept('./reducers', () => {
+      const nextRootReducer = require('./reducers/index');
+      store.replaceReducer(nextRootReducer);
+    });
+  }
+
+  return store;
+}
+
+const store = configureStore({ });
+
 export default class App extends React.Component {
   render() {
     return (
-      <Provider store={createStore(reducer)}>
-      <View style={{flex: 1}}>
-        <View  style={styles.statusBar}/>
-        <MainNavigator />
-      </View>
-    </Provider>
+      <Provider store={store}>
+        <View style={{ flex: 1 }}>
+          <View style={styles.statusBar} />
+          <MainNavigator ref={(c) => {
+            if (c) {
+              store.dispatch(setStackNavigator(c._navigation))
+            }
+          }} />
+        </View>
+      </Provider>
     );
   }
 }
