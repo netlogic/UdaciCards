@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { white } from '../utils/colors'
+import { connect } from 'react-redux'
 
-export default class AddCard extends Component {
+class AddCard extends Component {
     render() {
         return (
             <View style={styles.container}>
@@ -19,3 +20,13 @@ const styles = StyleSheet.create({
         padding: 15,
     },
 })
+
+
+function mapStateToProps(dataState, ownProps) {
+    return {
+    };
+}    
+
+export default connect(
+    mapStateToProps,
+)(AddCard)

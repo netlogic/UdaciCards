@@ -17,10 +17,9 @@ class Deck extends Component {
 
     static navigationOptions = ({ navigation }) => ({
         title: `${navigation.state.params.deck.title}`,
-        headerTitleStyle: { textAlign: 'center', alignSelf: 'center', color: 'white' },
-        headerStyle: {
-            backgroundColor: 'blue',
-        },
+        headerTintColor: white,
+        headerTitleStyle: {  color: 'white' },
+        headerStyle : { backgroundColor : blue }
     });
 
     displayQuiz() {
