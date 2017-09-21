@@ -29,7 +29,7 @@ Unfortunately I am defintely not a designer, just a coder.
 This project was a lot of fun to build and watching it run on 
   iPhone X simulator
   iPhone 6s Plus 
-  and an old Samsung was a really cool.
+  and an old Samsung G386T was really cool.
 
 I see easily if I add a CRUD backend app that I have a foundation for a fun
 educational app.  But I am happy with project because it reenforced my
@@ -39,12 +39,15 @@ I am very thankful for that.
 All stages of the project are in git and you can see the evolution of my work
 
 To get started please clone the follow repository:
-  git 
+    git clone https://github.com/netlogic/UdaciCards.git
+    cd Udacicards
 
-Then add the npm packages needed via:
+Then add the npm packages needed 
+execute the following command (it may take a minute to finish:
+
     yarn install
 
-Then do the start:
+Then to run on your machine:
     yarn start
 
 If fingers crossed no errors came up, please follow the prompts on the screen to run.
