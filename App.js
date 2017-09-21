@@ -10,6 +10,7 @@ import store from './store'
 import Decks from './components/Decks.js'
 import Deck from './components/Deck.js'
 import NewDeck from './components/NewDeck.js'
+import NewQuestion from './components/NewQuestion.js'
 import Scores from './components/Scores.js'
 import { white, gray, blue } from './utils/colors'
 import {setStackNavigator} from './actions'
@@ -29,6 +30,7 @@ const Tabs = TabNavigator({
       tabBarIcon: ({ tintColor }) => <Entypo name='add-to-list' size={30} color={tintColor} />
     },
   },
+  /* for future expansion think about saving and shoowing scores 
   Scores: {
     screen: Scores,
     navigationOptions: {
@@ -36,6 +38,7 @@ const Tabs = TabNavigator({
       tabBarIcon: ({ tintColor }) => <Entypo name='trophy' size={30} color={tintColor} />
     }
   }
+  */
 }, {
     navigationOptions: {
       header: null
@@ -62,6 +65,9 @@ const MainNavigator = StackNavigator({
   },
   Deck: {
     screen: Deck,
+  },
+  NewQuestion : {
+    screen : NewQuestion,
   }
 })
 

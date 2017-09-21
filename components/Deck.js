@@ -17,6 +17,7 @@ class Deck extends Component {
         super(props);
         this.displayFullDeck = this.displayFullDeck.bind(this)
         this.deleteThisDeck = this.deleteThisDeck.bind(this);
+        this.addQuestion = this.addQuestion.bind(this);
     }
 
     static navigationOptions = ({ navigation }) => ({
@@ -29,6 +30,10 @@ class Deck extends Component {
     displayFullDeck() {
 
         this.props.stackNavigator.navigate('Deck', { deck: this.props.paintDeck })
+    }
+
+    addQuestion() {
+        this.props.stackNavigator.navigate('NewQuestion', { deck: this.props.paintDeck })
     }
 
     renderMiniDeck() {
@@ -100,7 +105,7 @@ class Deck extends Component {
                 <ImageButton style={{ padding: 10}} imageName='shuffle' onPress={this.addNewDeck}>
                     START QUIZ!
                 </ImageButton>
-                <ImageButton style={{ padding: 10 }} imageName='plus' onPress={this.addNewDeck}>
+                <ImageButton style={{ padding: 10 }} imageName='plus' onPress={this.addQuestion}>
                     Add Question
                 </ImageButton>
                 <ImageButton style={{ padding: 10 }} imageName='trash' onPress={this.deleteThisDeck}>
