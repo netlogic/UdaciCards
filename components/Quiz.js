@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Keyboard, ScrollView, TouchableWithoutFeedback, KeyboardAvoidingView, Alert, Text, TextInput, StyleSheet } from 'react-native'
+import { View, Dimensions, Keyboard, ScrollView, TouchableWithoutFeedback, KeyboardAvoidingView, Alert, Text, TextInput, StyleSheet } from 'react-native'
 import { white, blue } from '../utils/colors'
 import { connect } from 'react-redux'
 import ImageButton from './ImageButton'
@@ -11,12 +11,14 @@ class Quiz extends Component {
     constructor(props) {
         super(props);
         this.questionOrder = null;
+        this.promptingUser = false;
         this.state = { score: 0, questionIndex: 0, showAnswer: false, currentTime: 0 };
         this.showAnswer = this.showAnswer.bind(this);
         this.correctAnswer = this.correctAnswer.bind(this);
         this.wrongAnswer = this.wrongAnswer.bind(this);
         this.exitQuiz = this.exitQuiz.bind(this);
         this.playAgain = this.playAgain.bind(this);
+        this.exitQuizWithPrompt = this.exitQuizWithPrompt.bind(this);
     }
 
     static navigationOptions = ({ navigation }) => ({
@@ -38,8 +40,8 @@ class Quiz extends Component {
                 ...previousState,
                 questionIndex: 0,
                 showAnswer: false,
-                score : 0,
-                currentTime : (new Date()).getTime()
+                score: 0,
+                currentTime: (new Date()).getTime()
             }
         });
     }
@@ -48,28 +50,20 @@ class Quiz extends Component {
         this.props.navigation.goBack();
     }
 
-    checkToAdd() {
-        this.setState({ editable: false });
+    exitQuizWithPrompt() {
+        this.promptingUser = true;
         Alert.alert(
             'UdaciCards',
-            `Are you sure you want to add the question '${this.state.question}'?`,
+            `Are you sure you want to exit this quiz?`,
             [
                 {
                     text: 'Cancel', onPress: () => {
-                        this.setState({ editable: true });
-                        console.log('Cancel Pressed')
+                        this.promptingUser = false;
                     }, style: 'cancel'
                 },
 
                 {
                     text: 'OK', onPress: () => {
-                        // add this deck
-                        //
-                        this.props.dispatch(addQuestionToDeck(this.props.title, this.state.question, this.state.answer));
-                        // save it out
-                        //
-                        saveAllDecks(store.getState().decks);
-                        this.setState({ text: "" });
                         // go home
                         this.props.navigation.goBack();
                     }
@@ -180,6 +174,11 @@ class Quiz extends Component {
             this.startTime = (new Date()).getTime();
         }
         this.interval = setInterval(() => {
+            let questionIndex = this.state.questionIndex;
+            let totalQ = this.deck().questions.length;
+            if (questionIndex === totalQ || this.promptingUser ) {
+                return; // nothing to do
+            }
             this.setState({ currentTime: (new Date()).getTime() });
         }, 1000)
     }
@@ -189,14 +188,33 @@ class Quiz extends Component {
     }
 
     renderQuizIsDone() {
+        let totalQ = this.deck().questions.length;
+
+        let timeDisplay;
+
+        if (this.state.currentTime !== 0) {
+            let seconds = this.state.currentTime - this.startTime;
+            seconds = parseInt(seconds / 1000);
+            timeDisplay = (
+                <Text style={styles.quizLine}>It took {seconds} seconds!</Text>
+            )
+        } else {
+            timeDisplay = (
+                <Text style={styles.quizLine}>>It was fast!</Text>
+            )
+        }
+
         return (
-            <View>
-                <Text>You did it!!</Text>
+            <View style={styles.container}>
+                <Text style={styles.quizLine}>You Finished!</Text>
+                <Text style={styles.quizLine}>Deck - {`${this.props.title}`}</Text>
+                <Text style={styles.quizLine}>{`Correct Answers: ${this.percentRight()}`}</Text>
+                {timeDisplay}
                 <ImageButton style={{ padding: 10 }} imageName='shuffle' onPress={this.playAgain}>
-                    PLAY AGAIN!
+                    RESTART QUIZ!
                 </ImageButton>
                 <ImageButton style={{ padding: 10 }} imageName='reply' onPress={this.exitQuiz}>
-                    EXIT
+                    Back to Deck
                 </ImageButton>
             </View>
         )
@@ -220,7 +238,11 @@ class Quiz extends Component {
             let seconds = this.state.currentTime - this.startTime;
             seconds = parseInt(seconds / 1000);
             timeDisplay = (
-                <Text>Time: {seconds}</Text>
+                <Text style={styles.timeText}>Time: {seconds}</Text>
+            )
+        } else {
+            timeDisplay = (
+                <Text style={styles.timeText}>Time: 0</Text>
             )
         }
 
@@ -228,15 +250,17 @@ class Quiz extends Component {
             <ScrollView style={styles.container}>
                 <View>
                     {timeDisplay}
-                    <Text style={styles.titleLine}>Quiz:{`${this.props.title}`}</Text>
-                    <Text style={styles.titleLine}>{`Question: ${questionIndex + 1} of ${totalQ}`}</Text>
+                    <Text style={styles.quizLine}>Quiz:{`${this.props.title}`}</Text>
                     <Text style={styles.titleLine}>{`Correct Answers: ${this.percentRight()}`}</Text>
+                    <Text style={styles.titleLine}>{`Question: ${questionIndex + 1} of ${totalQ}`}</Text>
+
                     {!this.state.showAnswer && (
                         <View>
                             <Text style={styles.title}>{question.question}</Text>
                             <ImageButton style={{ padding: 10 }} imageName='magnifying-glass' onPress={this.showAnswer}>
                                 Show Answer
                             </ImageButton>
+                            <View style={{ height: 86 }} />
                         </View>
                     )
                     }
@@ -249,13 +273,18 @@ class Quiz extends Component {
                             <ImageButton style={{ padding: 10 }} imageName='cross' onPress={this.wrongAnswer}>
                                 INCORRECT!
                             </ImageButton>
+                            <View style={{ height: 20 }} />
                         </View>
                     )
                     }
                     <View style={{ height: 60 }} />
                 </View>
+                <View style={styles.buttonExit}>
+                    <ImageButton style={{ padding: 10 }} imageName='reply' onPress={this.exitQuizWithPrompt}>
+                        Back to Deck
+                            </ImageButton>
+                </View>
             </ScrollView >
-
         )
     }
 }
@@ -265,6 +294,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: white,
         padding: 15,
+    },
+    buttonExit: {
+        padding: 10,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        top: Dimensions.get('window').height - 120
     },
     titleInput: {
         height: 40,
@@ -276,22 +313,45 @@ const styles = StyleSheet.create({
         margin: 10,
         textAlign: 'center',
     },
-    titleAnswer: {
-        height: 120,
-        borderColor: blue,
-        borderWidth: 1,
+    title: {
+        fontSize: 22,
+        fontWeight: 'bold',
         color: blue,
-        paddingLeft: 10,
-        paddingRight: 10,
+        marginTop: 5,
+        marginBottom: 5,
+        marginRight: 15,
+        marginLeft: 15,
         margin: 10,
         textAlign: 'center',
     },
     titleLine: {
-        fontSize: 24,
+        fontSize: 16,
         margin: 20,
         color: blue,
-        textAlign: 'center',
-
+        textAlign: 'left',
+        marginTop: 5,
+        marginBottom: 5,
+        marginRight: 15,
+        marginLeft: 15,
+    },
+    quizLine: {
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginTop: 10,
+        marginBottom: 10,
+        marginRight: 15,
+        marginLeft: 15,
+        color: blue,
+        textAlign: 'left',
+    },
+    timeText: {
+        fontSize: 14,
+        marginTop: 20,
+        marginBottom: 10,
+        marginRight: 15,
+        marginLeft: 15,
+        color: blue,
+        textAlign: 'left',
     }
 })
 
