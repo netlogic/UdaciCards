@@ -20,6 +20,10 @@ function decks(state = { decks: {} }, action) {
             {
                 let obj = { ...state };
                 let decks = obj.decks;
+                if ( !decks ) {
+                    obj.decks = {};
+                    decks = obj.decks;
+                }
                 decks[action.title] = {
                     title: action.title,
                     questions: [],
