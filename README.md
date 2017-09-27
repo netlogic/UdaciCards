@@ -1,3 +1,26 @@
+To the reviewer:
+Once again thank you taking the time to review my project.
+Last reviewer found (much to my embarassment) two errors.
+
+1. After adding a new deck the edit field of 
+   the view for adding a new deck left the 
+   edit field disabled.   It was set to disabled
+   so the keyboard would stay hidden on transition.
+   This has been corrected.
+
+2. After adding a new error my reducer did not correctly
+   check if a collection of decks existed.  This caused the app
+   to crash.  Both fixes can be found in github.
+
+In order to review my project please follow the instructions
+below from the original read me file.
+
+I look forward to your help and thank you for taking 
+the time to do the review.
+Bret
+
+Getting started:
+
 Thank you for taking the time to review my project.
 
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
