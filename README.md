@@ -12,6 +12,13 @@ Last reviewer found (much to my embarassment) two errors.
    check if a collection of decks existed.  This caused the app
    to crash.  Both fixes can be found in github.
 
+All changes are in version control on github.
+
+One thing to Note: Expo 21 just came out and when I started 
+up the simulator my app would not run. 
+I have updated my package.json and app.json
+to work with Expo 21.
+
 In order to review my project please follow the instructions
 below from the original read me file.
 
