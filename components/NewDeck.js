@@ -62,7 +62,7 @@ class NewDeck extends Component {
                         //
                         this.props.dispatch(addDeck(title));
 
-                        this.setState({ text: "", editable: false });
+                        this.setState({ text: "", editable: true });
 
                         // save it out
                         //
